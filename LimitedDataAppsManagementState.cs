@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Fathym;
+using LCU.Graphs.Registry.Enterprises.Apps;
 using LCU.Presentation.State.ReqRes;
 using LCU.StateAPI.Utilities;
 using LCU.StateAPI;
@@ -26,8 +27,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #region Constants
         public const string HUB_NAME = "limiteddataappsmanagement";
         #endregion
-        
+
+        [DataMember]
+        public virtual List<Application> Applications { get; set; }
         [DataMember]
         public virtual bool Loading { get; set; }
+
+        [DataMember]
+        public virtual string OrganizationLookup { get; set; }
+
+        [DataMember]
+        public virtual Status Status { get; set; }
     }
 }
