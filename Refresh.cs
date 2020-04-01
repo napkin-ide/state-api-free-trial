@@ -53,7 +53,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 {
                     log.LogInformation($"Refreshing data applications state");
 
-                    return await refreshDataApps(log);
+                    return await refreshDataApps(harness, log, stateDetails);
                 });
             else if (stateDetails.StateKey == "data-flow")
                 return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, RefreshRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
@@ -61,7 +61,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 {
                     log.LogInformation($"Refreshing data flow state");
 
-                    return await refreshDataFlow(log);
+                    return await refreshDataFlow(harness, log, stateDetails);
                 });
             else
                 throw new Exception("A valid State Key must be provided (data-apps, data-flow).");
@@ -69,14 +69,14 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region Helpers
-        protected virtual async Task<Status> refreshDataApps(LimitedDataAppsStateHarness harness, ILogger log)
+        protected virtual async Task<Status> refreshDataApps(LimitedDataAppsStateHarness harness, ILogger log, StateDetails stateDetails)
         {
-            harness.Mock();
+            harness.Mock(stateDetails.EnterpriseAPIKey, stateDetails.Host);
 
             return Status.Success;
         }
 
-        protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log)
+        protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log, StateDetails stateDetails)
         {
             harness.Mock();
             

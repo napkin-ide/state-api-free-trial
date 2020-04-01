@@ -45,5 +45,5 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             //  TODO:  Mock starting point state
         }
         #endregion
-    }
+    }               
 }

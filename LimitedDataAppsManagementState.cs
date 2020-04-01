@@ -25,14 +25,50 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     public class LimitedDataAppsManagementState
     {
         [DataMember]
+        public virtual Application ActiveApp { get; set; }
+
+        [DataMember]
+        public List<DAFAPIConfiguration> ActiveDAFAPIs { get; set; }
+
+        [DataMember]
+        public virtual DAFApplicationConfiguration ActiveDAFApp { get; set; }
+
+        [DataMember]
+        public virtual bool AddingApp { get; set; }
+
+        [DataMember]
         public virtual List<Application> Applications { get; set; }
+
+        [DataMember]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public virtual DAFAppTypes? AppType { get; set; }
+
+        [DataMember]
+        public virtual List<Application> DefaultApps { get; set; }
+
+        [DataMember]
+        public virtual Status DefaultAppsEnabled { get; set; }
+
+        [DataMember]
+        public virtual List<string> HostOptions { get; set; }
+
         [DataMember]
         public virtual bool Loading { get; set; }
 
         [DataMember]
-        public virtual string OrganizationLookup { get; set; }
+        public virtual Dictionary<string,List<string>> VersionLookups { get; set; }
+    }
 
-        [DataMember]
-        public virtual Status Status { get; set; }
+    [DataContract]
+    public enum DAFAppTypes
+    {
+        [EnumMember]
+        View,
+        
+        [EnumMember]
+        API,
+        
+        [EnumMember]
+        Redirect
     }
 }
