@@ -24,10 +24,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     [DataContract]
     public class LimitedDataFlowManagementState
     {
-        #region Constants
-        public const string HUB_NAME = "limiteddataflowmanagement";
-        #endregion
-
         [DataMember]
         public virtual List<DataFlow> DataFlows { get; set; }
 

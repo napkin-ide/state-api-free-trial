@@ -40,9 +40,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual void CompleteBoot()
+        public virtual void Mock()
         {
-            // State.L = true;
+            //  TODO:  Mock starting point state
         }
         #endregion
     }

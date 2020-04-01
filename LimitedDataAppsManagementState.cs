@@ -24,10 +24,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     [DataContract]
     public class LimitedDataAppsManagementState
     {
-        #region Constants
-        public const string HUB_NAME = "limiteddataappsmanagement";
-        #endregion
-
         [DataMember]
         public virtual List<Application> Applications { get; set; }
         [DataMember]

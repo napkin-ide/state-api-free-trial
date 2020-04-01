@@ -23,7 +23,14 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRGroupAction> signalRGroupActions,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await signalRMessages.ConnectToState<LimitedTrialState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
+            var stateDetails = StateUtils.LoadStateDetails(req);
+
+            if (stateDetails.StateKey == "data-apps")
+                return await signalRMessages.ConnectToState<LimitedDataAppsManagementState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
+            else if (stateDetails.StateKey == "data-flow")
+                return await signalRMessages.ConnectToState<LimitedDataFlowManagementState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
+            else
+                throw new Exception("A valid State Key must be provided (data-apps, data-flow).");
         }
     }
 }

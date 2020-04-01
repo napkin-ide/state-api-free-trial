@@ -28,26 +28,60 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
     public class Refresh
     {
+        #region Fields
         protected EnterpriseManagerClient entMgr;
+        #endregion
 
+        #region Constructors
         public Refresh(EnterpriseManagerClient entMgr)
         {
             this.entMgr = entMgr;
         }
+        #endregion
 
+        #region API Methods
         [FunctionName("Refresh")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedTrialState, RefreshRequest, LimitedTrialStateHarness>(req, signalRMessages, log,
-                async (harness, refreshReq, actReq) =>
-            {
-                log.LogInformation($"Refresh");
+            var stateDetails = StateUtils.LoadStateDetails(req);
 
-                var stateDetails = StateUtils.LoadStateDetails(req);
+            if (stateDetails.StateKey == "data-apps")
+                return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, RefreshRequest, LimitedDataAppsStateHarness>(req, signalRMessages, log,
+                    async (harness, refreshReq, actReq) =>
+                {
+                    log.LogInformation($"Refreshing data applications state");
 
-            });
+                    return await refreshDataApps(log);
+                });
+            else if (stateDetails.StateKey == "data-flow")
+                return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, RefreshRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
+                    async (harness, refreshReq, actReq) =>
+                {
+                    log.LogInformation($"Refreshing data flow state");
+
+                    return await refreshDataFlow(log);
+                });
+            else
+                throw new Exception("A valid State Key must be provided (data-apps, data-flow).");
         }
+        #endregion
+
+        #region Helpers
+        protected virtual async Task<Status> refreshDataApps(LimitedDataAppsStateHarness harness, ILogger log)
+        {
+            harness.Mock();
+
+            return Status.Success;
+        }
+
+        protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log)
+        {
+            harness.Mock();
+            
+            return Status.Success;
+        }
+        #endregion
     }
 }

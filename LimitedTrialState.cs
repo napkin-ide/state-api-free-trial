@@ -26,8 +26,5 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #region Constants
         public const string HUB_NAME = "limitedtrial";
         #endregion
-        
-        [DataMember]
-        public virtual bool Loading { get; set; }
     }
 }
