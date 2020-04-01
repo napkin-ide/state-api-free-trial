@@ -57,6 +57,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         [DataMember]
         public virtual Dictionary<string,List<string>> VersionLookups { get; set; }
+
+        [DataMember]
+        public virtual List<DAFApplicationConfiguration> DAFApps { get; set; }
     }
 
     [DataContract]
