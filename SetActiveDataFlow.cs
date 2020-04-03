@@ -14,7 +14,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using LCU.StateAPI.Utilities;
 using LCU.Personas.Client.Applications;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
     [Serializable]
     [DataContract]
@@ -26,26 +26,21 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
 
     public class SetActiveDataFlow
     {
-        protected ApplicationDeveloperClient appDev;
-
-        public SetActiveDataFlow(ApplicationDeveloperClient appDev)
-        {
-            this.appDev = appDev;
-        }
-
         [FunctionName("SetActiveDataFlow")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
-            [SignalR(HubName = DataFlowManagementState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
+            [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<DataFlowManagementState, SetActiveDataFlowRequest, DataFlowManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, SetActiveDataFlowRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 log.LogInformation($"Setting Active Data Flow: {reqData.DataFlowLookup}");
 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.SetActiveDataFlow(appDev, stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
+                await harness.SetActiveDataFlow(stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
+
+                return Status.Success;
             });
         }
     }

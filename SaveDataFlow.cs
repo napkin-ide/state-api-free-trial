@@ -15,7 +15,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using LCU.StateAPI.Utilities;
 using LCU.Personas.Client.Applications;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
     [Serializable]
     [DataContract]
@@ -27,30 +27,21 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
 
     public class SaveDataFlow
     {
-        protected ApplicationDeveloperClient appDev;
-        
-        protected ApplicationManagerClient appMgr;
-
-        public SaveDataFlow(ApplicationManagerClient appMgr, ApplicationDeveloperClient appDev)
-        {
-            this.appDev = appDev;
-            
-            this.appMgr = appMgr;
-        }
-
         [FunctionName("SaveDataFlow")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
-            [SignalR(HubName = DataFlowManagementState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
+            [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<DataFlowManagementState, SaveDataFlowRequest, DataFlowManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, SaveDataFlowRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 log.LogInformation($"Saving Data Flow: {reqData.DataFlow.Name}");
 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.SaveDataFlow(appMgr, appDev, stateDetails.EnterpriseAPIKey, reqData.DataFlow);
+                await harness.SaveDataFlow(stateDetails.EnterpriseAPIKey, reqData.DataFlow);
+
+                return Status.Success;
             });
         }
     }

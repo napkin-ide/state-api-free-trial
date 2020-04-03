@@ -25,6 +25,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     public class LimitedDataFlowManagementState
     {
         [DataMember]
+        public virtual DataFlow ActiveDataFlow { get; set; }
+
+        [DataMember]
+        public bool AllowCreationModules { get; set; }
+        
+        [DataMember]
         public virtual List<DataFlow> DataFlows { get; set; }
 
         [DataMember]
@@ -32,6 +38,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         [DataMember]
         public virtual string EnvironmentLookup { get; set; }
+
+        [DataMember]
+        public virtual bool IsCreating { get; set; }
 
         [DataMember]
         public virtual bool Loading { get; set; }

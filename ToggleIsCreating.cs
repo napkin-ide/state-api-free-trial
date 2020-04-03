@@ -13,7 +13,7 @@ using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.WindowsAzure.Storage.Blob;
 using LCU.StateAPI.Utilities;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
     [Serializable]
     [DataContract]
@@ -24,10 +24,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
     {
         [FunctionName("ToggleIsCreating")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
-            [SignalR(HubName = DataFlowManagementState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
+            [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<DataFlowManagementState, ToggleIsCreatingRequest, DataFlowManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, ToggleIsCreatingRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 log.LogInformation($"Refresh");
@@ -35,6 +35,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.DataFlowManagement
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
                 await harness.ToggleIsCreating();
+
+                return Status.Success;
             });
         }
     }
