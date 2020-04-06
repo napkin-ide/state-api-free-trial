@@ -15,6 +15,7 @@ using LCU.StateAPI.Utilities;
 using LCU.StateAPI;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Newtonsoft.Json.Converters;
+using System.Configuration;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using LCU.Personas.Client.Enterprises;
@@ -46,11 +47,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             //  TODO:  Mock starting point state
 
-            State.EnvironmentLookup = "limited-lcu-int";
+            State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
             
         }
 
-        public virtual async Task CheckActiveDataFlowStatus(string entApiKey)
+        public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
         {
             var resp = await appDev.CheckDataFlowStatus(new Personas.Applications.CheckDataFlowStatusRequest()
             {
@@ -63,40 +64,38 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task DeleteDataFlow(string entApiKey, string dataFlowLookup)
         {
-            var resp = await appMgr.DeleteDataFlow(entApiKey, State.EnvironmentLookup, dataFlowLookup);
+            var dataFlow = new DataFlow(){
+                Lookup = dataFlowLookup
+            };
 
-            await LoadDataFlows(entApiKey);
+            State.DataFlows = State.DataFlows.Where(df => df.Lookup == dataFlowLookup).ToList();
+
+            State.DataFlows.Remove(dataFlow);
+
+            // await LoadDataFlows(entApiKey);
         }
 
-        public virtual async Task DeployDataFlow(string entApiKey, string dataFlowLookup)
-        {
-            var resp = await appDev.DeployDataFlow(new Personas.Applications.DeployDataFlowRequest()
-            {
-                DataFlowLookup = dataFlowLookup
-            }, entApiKey, State.EnvironmentLookup);
+        // Note - Don't think we need the method below, we won't be provisioning anything during limited trial
 
-            State.IsCreating = !resp.Status;
+        // public virtual async Task DeployDataFlow(string entApiKey, string dataFlowLookup)
+        // {
+        //     var resp = await appDev.DeployDataFlow(new Personas.Applications.DeployDataFlowRequest()
+        //     {
+        //         DataFlowLookup = dataFlowLookup
+        //     }, entApiKey, State.EnvironmentLookup);
 
-            await LoadDataFlows(entApiKey);
-        }
+        //     State.IsCreating = !resp.Status;
 
-        public virtual async Task LoadDataFlows(string entApiKey)
-        {
-            var resp = await appMgr.ListDataFlows(entApiKey, State.EnvironmentLookup);
+        //     await LoadDataFlows(entApiKey);
+        // }
 
-            State.DataFlows = resp.Model;
+        // public virtual async Task LoadDataFlows(string entApiKey)
+        // {
+            
+        //     await SetActiveDataFlow(entApiKey, State?.ActiveDataFlow?.Lookup);
+        // }
 
-            await SetActiveDataFlow(entApiKey, State?.ActiveDataFlow?.Lookup);
-        }
-
-        public virtual async Task LoadEnvironment(EnterpriseManagerClient entMgr, string entApiKey)
-        {
-            var resp = await entMgr.ListEnvironments(entApiKey);
-
-            State.EnvironmentLookup = resp.Model?.FirstOrDefault()?.Lookup;
-        }
-
-        public virtual async Task LoadModulePackSetup(string entApiKey, string host)
+        public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr,string entApiKey, string host)
         {
             var mpsResp = await appMgr.ListModulePackSetups(entApiKey, host);
 
@@ -210,10 +209,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
             State.DataFlows.Add(dataFlow);
 
-            await LoadDataFlows(entApiKey);
         }
 
-        public virtual async Task SetActiveDataFlow(string entApiKey, string dfLookup)
+        public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, string dfLookup)
         {
             State.ActiveDataFlow = State.DataFlows.FirstOrDefault(df => df.Lookup == dfLookup);
 
@@ -222,15 +220,15 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 //  Trying on refresh only...
                 // await LoadModulePackSetup();
 
-                await CheckActiveDataFlowStatus(entApiKey);
+                await CheckActiveDataFlowStatus(appDev, entApiKey);
             }
         }
 
-        public virtual async Task ToggleCreationModules(string entApiKey, string host)
+        public virtual async Task ToggleCreationModules(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             State.AllowCreationModules = !State.AllowCreationModules;
 
-            await LoadModulePackSetup(entApiKey, host);
+            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);
         }
 
         public virtual async Task ToggleIsCreating()

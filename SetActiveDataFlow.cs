@@ -23,9 +23,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         [DataMember]
         public virtual string DataFlowLookup { get; set; }
     }
-
     public class SetActiveDataFlow
     {
+        protected ApplicationDeveloperClient appDev;
+
+        public SetActiveDataFlow(ApplicationDeveloperClient appDev)
+        {
+            this.appDev = appDev;
+            
+        }
+
         [FunctionName("SetActiveDataFlow")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
@@ -38,7 +45,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.SetActiveDataFlow(stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
+                await harness.SetActiveDataFlow(appDev, stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
 
                 return Status.Success;
             });

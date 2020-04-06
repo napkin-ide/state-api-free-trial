@@ -24,6 +24,17 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
     public class ToggleCreationModules
     {
+        protected ApplicationManagerClient appMgr;
+        
+        protected EnterpriseManagerClient entMgr;
+
+        public ToggleCreationModules(EnterpriseManagerClient entMgr, ApplicationManagerClient appMgr)
+        {
+            this.appMgr = appMgr;
+            
+            this.entMgr = entMgr;
+        }
+
         [FunctionName("ToggleCreationModules")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
@@ -36,7 +47,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.ToggleCreationModules(stateDetails.EnterpriseAPIKey, stateDetails.Host);
+                await harness.ToggleCreationModules(appMgr, entMgr, stateDetails.EnterpriseAPIKey, stateDetails.Host);
 
                 return Status.Success;
             });
