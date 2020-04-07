@@ -48,6 +48,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             //  TODO:  Mock starting point state
 
             State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
+
+            State.DataFlows = new List<DataFlow>();
             
         }
 
@@ -205,7 +207,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task SaveDataFlow(string entApiKey, DataFlow dataFlow)
         {
-            State.DataFlows = State.DataFlows.Where(df => df.Lookup != dataFlow.Lookup).ToList();
+            var flowToSave =  State.DataFlows.FirstOrDefault(df => df.Lookup == dataFlow.Lookup);
+
+            if (flowToSave != null){
+                State.DataFlows.Remove(flowToSave);
+            }
 
             State.DataFlows.Add(dataFlow);
 
