@@ -49,7 +49,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
             State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
 
-            State.DataFlows = new List<DataFlow>();
+            if (State.DataFlows.IsNullOrEmpty())
+                State.DataFlows = new List<DataFlow>();
+            
             
         }
 
