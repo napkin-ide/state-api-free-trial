@@ -223,13 +223,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             State.ActiveDataFlow = State.DataFlows.FirstOrDefault(df => df.Lookup == dfLookup);
 
-            if (State.ActiveDataFlow != null)
-            {
-                //  Trying on refresh only...
-                // await LoadModulePackSetup();
+            // if (State.ActiveDataFlow != null)
+            // {
+            //     //  Trying on refresh only...
+            //     // await LoadModulePackSetup();
 
-                await CheckActiveDataFlowStatus(appDev, entApiKey);
-            }
+            //     await CheckActiveDataFlowStatus(appDev, entApiKey);
+            // }
         }
 
         public virtual async Task ToggleCreationModules(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
