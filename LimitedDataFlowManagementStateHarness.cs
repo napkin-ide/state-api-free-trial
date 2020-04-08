@@ -50,9 +50,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
 
             if (State.DataFlows.IsNullOrEmpty())
-                State.DataFlows = new List<DataFlow>();
-            
-            
+                State.DataFlows = new List<DataFlow>();    
         }
 
         public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
@@ -93,13 +91,20 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         //     await LoadDataFlows(entApiKey);
         // }
 
-        // public virtual async Task LoadDataFlows(string entApiKey)
-        // {
+        public virtual async Task LoadDataFlows(ApplicationDeveloperClient appDev, string entApiKey)
+        {
             
-        //     await SetActiveDataFlow(entApiKey, State?.ActiveDataFlow?.Lookup);
-        // }
+            await SetActiveDataFlow(appDev, entApiKey, State?.ActiveDataFlow?.Lookup);
+        }
 
-        public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr,string entApiKey, string host)
+        public virtual async Task LoadEnvironment(EnterpriseManagerClient entMgr, string entApiKey)
+        {
+            var resp = await entMgr.ListEnvironments(entApiKey);
+
+            State.EnvironmentLookup = resp.Model?.FirstOrDefault()?.Lookup;
+        }
+        
+        public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             var mpsResp = await appMgr.ListModulePackSetups(entApiKey, host);
 
@@ -198,14 +203,14 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
         }
 
-        // public virtual async Task Refresh(ApplicationDeveloperClient appDev, string entApiKey, string host)
-        // {
-        //     await LoadEnvironment(entApiKey);
+        public virtual async Task Refresh(ApplicationDeveloperClient appDev, ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
+        {
+            //await LoadEnvironment(entMgr, entApiKey);
 
-        //     await LoadDataFlows(entApiKey);
+            await LoadDataFlows(appDev, entApiKey);
 
-        //     await LoadModulePackSetup(entApiKey, host);
-        // }
+            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);
+        }
 
         public virtual async Task SaveDataFlow(string entApiKey, DataFlow dataFlow)
         {
