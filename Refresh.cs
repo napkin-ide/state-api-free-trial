@@ -29,12 +29,21 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     public class Refresh
     {
         #region Fields
+        protected ApplicationDeveloperClient appDev;
+
+        protected ApplicationManagerClient appMgr;
+
         protected EnterpriseManagerClient entMgr;
+
         #endregion
 
         #region Constructors
-        public Refresh(EnterpriseManagerClient entMgr)
+        public Refresh(EnterpriseManagerClient entMgr, ApplicationDeveloperClient appDev, ApplicationManagerClient appMgr)
         {
+            this.appDev = appDev;
+
+            this.appMgr = appMgr;
+
             this.entMgr = entMgr;
         }
         #endregion
@@ -78,7 +87,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log, StateDetails stateDetails)
         {
-            harness.Mock();
+            harness.Mock(appMgr, entMgr, stateDetails.EnterpriseAPIKey, stateDetails.Host);
             
             return Status.Success;
         }

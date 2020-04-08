@@ -43,14 +43,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual void Mock()
+        public virtual void Mock(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             //  TODO:  Mock starting point state
 
             State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
 
             if (State.DataFlows.IsNullOrEmpty())
-                State.DataFlows = new List<DataFlow>();    
+                State.DataFlows = new List<DataFlow>();
+
+            LoadModulePackSetup(appMgr, entMgr, entApiKey, host);    
         }
 
         public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
@@ -66,13 +68,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task DeleteDataFlow(string entApiKey, string dataFlowLookup)
         {
-            var dataFlow = new DataFlow(){
-                Lookup = dataFlowLookup
-            };
-
-            State.DataFlows = State.DataFlows.Where(df => df.Lookup == dataFlowLookup).ToList();
-
-            State.DataFlows.Remove(dataFlow);
+            var flowToDelete = State.DataFlows.FirstOrDefault(df => df.Lookup == dataFlowLookup);
+            
+            State.DataFlows.Remove(flowToDelete);
 
             // await LoadDataFlows(entApiKey);
         }
@@ -209,7 +207,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
             await LoadDataFlows(appDev, entApiKey);
 
-            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);
+            
         }
 
         public virtual async Task SaveDataFlow(string entApiKey, DataFlow dataFlow)
