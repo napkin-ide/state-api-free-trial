@@ -205,8 +205,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             State.ActiveApp = null;
 
-            State.AddingApp = false;
-
+            if(State.AddingApp == true){
+                State.AddingApp = false;
+            }
+            
+            else{
+                State.AddingApp = true;
+            }
         }
         #endregion
     }

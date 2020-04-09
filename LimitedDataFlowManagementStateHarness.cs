@@ -43,7 +43,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual void Mock(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
+        public virtual async Task Mock(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             //  TODO:  Mock starting point state
 
@@ -52,7 +52,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
 
-            LoadModulePackSetup(appMgr, entMgr, entApiKey, host);    
+            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);    
         }
 
         public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
