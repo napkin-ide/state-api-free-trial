@@ -70,17 +70,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         PathRegex = "/forecast*",
                         Priority = 10500,
                         ID = new Guid("00000000-0000-0000-0000-000000000002")
-                    },
-                    new Application(){
-                        Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
-                            host,
-                        },
-                        Name = "Freeboard",
-                        PathRegex = "/freeboard*",
-                        Priority = 10000,
-                        ID = new Guid("00000000-0000-0000-0000-000000000001")
                     }
                 };
 
