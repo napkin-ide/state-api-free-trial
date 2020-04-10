@@ -87,7 +87,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log, StateDetails stateDetails)
         {
-            harness.Mock(appMgr, entMgr, stateDetails.EnterpriseAPIKey, stateDetails.Host);
+            await harness.Mock(appMgr, entMgr, stateDetails.EnterpriseAPIKey, stateDetails.Host);
             
             return Status.Success;
         }

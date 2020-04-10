@@ -194,7 +194,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task SetActiveApp(string entApiKey, Application app)
         {
-            await ToggleAddNew();
+            //await ToggleAddNew();
 
             State.ActiveApp = app;
 
@@ -212,6 +212,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             else{
                 State.AddingApp = true;
             }
+
         }
         #endregion
     }
