@@ -47,7 +47,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             //  TODO:  Mock starting point state
 
-            State.EnvironmentLookup = ConfigurationManager.AppSettings["EnvironmentLookup"];
+            State.EnvironmentLookup = "limited-lcu-int";
 
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
