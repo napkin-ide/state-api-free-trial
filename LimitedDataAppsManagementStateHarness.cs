@@ -197,17 +197,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             await LoadAppView(entApiKey);
         }
 
-        public virtual async Task ToggleAddNew()
+        public virtual async Task ToggleAddNew(bool New)
         {
             State.ActiveApp = null;
 
-            if(State.AddingApp == true){
-                State.AddingApp = false;
-            }
-            
-            else{
-                State.AddingApp = true;
-            }
+            State.AddingApp = New;
 
         }
         #endregion

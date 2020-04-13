@@ -22,7 +22,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
 
     public class ToggleAddNewRequest
-    { }
+    {
+        [DataMember]
+        public virtual bool New { get; set; }
+    }
     public class ToggleAddNew
     {
         [FunctionName("ToggleAddNew")]
@@ -37,7 +40,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                 log.LogInformation($"Toggling Add New");
 
-                await harness.ToggleAddNew();
+                await harness.ToggleAddNew(reqData.New);
 
                 return Status.Success;
             });
