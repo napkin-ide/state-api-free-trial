@@ -57,7 +57,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             var stateDetails = StateUtils.LoadStateDetails(req);
 
             if (stateDetails.StateKey == "data-apps")
-                return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, RefreshRequest, LimitedDataAppsStateHarness>(req, signalRMessages, log,
+                return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, RefreshRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
                     async (harness, refreshReq, actReq) =>
                 {
                     log.LogInformation($"Refreshing data applications state");
@@ -65,7 +65,15 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     return await refreshDataApps(harness, log, stateDetails);
                 });
             else if (stateDetails.StateKey == "data-flow")
-                return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, RefreshRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
+                return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, RefreshRequest, LimitedDataFlowManagementStateHarness>(req, signalRMessages, log,
+                    async (harness, refreshReq, actReq) =>
+                {
+                    log.LogInformation($"Refreshing data flow state");
+
+                    return await refreshDataFlow(harness, log, stateDetails);
+                });
+            else if (stateDetails.StateKey == "journeys")
+                return await stateBlob.WithStateHarness<LimitedJourneysManagementState, RefreshRequest, LimitedJourneysManagementStateHarness>(req, signalRMessages, log,
                     async (harness, refreshReq, actReq) =>
                 {
                     log.LogInformation($"Refreshing data flow state");
@@ -78,17 +86,24 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region Helpers
-        protected virtual async Task<Status> refreshDataApps(LimitedDataAppsStateHarness harness, ILogger log, StateDetails stateDetails)
+        protected virtual async Task<Status> refreshDataApps(LimitedDataAppsManagementStateHarness harness, ILogger log, StateDetails stateDetails)
         {
             harness.Mock(stateDetails.EnterpriseAPIKey, stateDetails.Host);
 
             return Status.Success;
         }
 
-        protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowStateHarness harness, ILogger log, StateDetails stateDetails)
+        protected virtual async Task<Status> refreshDataFlow(LimitedDataFlowManagementStateHarness harness, ILogger log, StateDetails stateDetails)
         {
             await harness.Mock(appMgr, entMgr, stateDetails.EnterpriseAPIKey, stateDetails.Host);
-            
+
+            return Status.Success;
+        }
+
+        protected virtual async Task<Status> refreshJourneys(LimitedJourneysManagementStateHarness harness, ILogger log, StateDetails stateDetails)
+        {
+            await harness.Refresh();
+
             return Status.Success;
         }
         #endregion

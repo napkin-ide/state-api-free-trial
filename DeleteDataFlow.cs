@@ -31,7 +31,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, DeleteDataFlowRequest, LimitedDataFlowStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, DeleteDataFlowRequest, LimitedDataFlowManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 log.LogInformation($"Deleting Data Flow: {reqData.DataFlowLookup}");

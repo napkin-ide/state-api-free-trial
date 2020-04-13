@@ -33,7 +33,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, ToggleAddNewRequest, LimitedDataAppsStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, ToggleAddNewRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 var stateDetails = StateUtils.LoadStateDetails(req);

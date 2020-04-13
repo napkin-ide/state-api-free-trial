@@ -29,6 +29,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 return await signalRMessages.ConnectToState<LimitedDataAppsManagementState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
             else if (stateDetails.StateKey == "data-flow")
                 return await signalRMessages.ConnectToState<LimitedDataFlowManagementState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
+            else if (stateDetails.StateKey == "journeys")
+                return await signalRMessages.ConnectToState<LimitedJourneysManagementState>(req, log, claimsPrincipal, stateBlob, signalRGroupActions);
             else
                 throw new Exception("A valid State Key must be provided (data-apps, data-flow).");
         }

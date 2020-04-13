@@ -28,7 +28,7 @@ using Newtonsoft.Json.Linq;
 
 namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
-    public class LimitedDataFlowStateHarness : LCUStateHarness<LimitedDataFlowManagementState>
+    public class LimitedDataFlowManagementStateHarness : LCUStateHarness<LimitedDataFlowManagementState>
     {
         #region Fields
         #endregion
@@ -37,7 +37,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region Constructors
-        public LimitedDataFlowStateHarness(LimitedDataFlowManagementState state)
+        public LimitedDataFlowManagementStateHarness(LimitedDataFlowManagementState state)
             : base(state ?? new LimitedDataFlowManagementState())
         { }
         #endregion

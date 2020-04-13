@@ -26,7 +26,7 @@ using LCU.Graphs.Registry.Enterprises.Apps;
 
 namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
-    public class LimitedDataAppsStateHarness : LCUStateHarness<LimitedDataAppsManagementState>
+    public class LimitedDataAppsManagementStateHarness : LCUStateHarness<LimitedDataAppsManagementState>
     {
         #region Fields
         protected readonly List<DAFApplicationConfiguration> dafApps;
@@ -36,7 +36,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region Constructors
-        public LimitedDataAppsStateHarness(LimitedDataAppsManagementState state)
+        public LimitedDataAppsManagementStateHarness(LimitedDataAppsManagementState state)
             : base(state ?? new LimitedDataAppsManagementState())
         {
 
