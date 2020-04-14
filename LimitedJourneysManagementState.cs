@@ -36,27 +36,27 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     {
         [DataMember]
         public virtual bool Active { get; set; }
-        
+
         [DataMember]
         public virtual bool ComingSoon { get; set; }
-        
+
         [DataMember]
         public virtual string ContentURL { get; set; }
-        
+
         [DataMember]
         public virtual string Description { get; set; }
-        
+
         [DataMember]
         [JsonConverter(typeof(StringEnumConverter))]
         public virtual JourneyContentTypes ContentType { get; set; }
-        
+
         [DataMember]
         public virtual string Name { get; set; }
-        
+
         [DataMember]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("Roles", ItemConverterType = typeof(StringEnumConverter))]
         public virtual List<JourneyRoleTypes> Roles { get; set; }
-        
+
         [DataMember]
         public virtual List<string> Uses { get; set; }
     }
@@ -66,7 +66,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     {
         [EnumMember]
         Image,
-        
+
         [EnumMember]
         Video
     }
@@ -76,10 +76,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     {
         [EnumMember]
         Administrator,
-        
+
         [EnumMember]
         Designer,
-        
+
         [EnumMember]
         Developer
     }
