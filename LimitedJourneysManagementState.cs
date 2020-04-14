@@ -35,6 +35,52 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     public class JourneyOption
     {
         [DataMember]
+        public virtual bool Active { get; set; }
+        
+        [DataMember]
+        public virtual bool ComingSoon { get; set; }
+        
+        [DataMember]
+        public virtual string ContentURL { get; set; }
+        
+        [DataMember]
+        public virtual string Description { get; set; }
+        
+        [DataMember]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public virtual JourneyContentTypes ContentType { get; set; }
+        
+        [DataMember]
         public virtual string Name { get; set; }
+        
+        [DataMember]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public virtual List<JourneyRoleTypes> Roles { get; set; }
+        
+        [DataMember]
+        public virtual List<string> Uses { get; set; }
+    }
+
+    [DataContract]
+    public enum JourneyContentTypes
+    {
+        [EnumMember]
+        Image,
+        
+        [EnumMember]
+        Video
+    }
+
+    [DataContract]
+    public enum JourneyRoleTypes
+    {
+        [EnumMember]
+        Administrator,
+        
+        [EnumMember]
+        Designer,
+        
+        [EnumMember]
+        Developer
     }
 }

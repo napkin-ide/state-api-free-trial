@@ -177,9 +177,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             await SetActiveApp(entApiKey, State.ActiveApp);
         }
 
-
-        public virtual async Task SaveDataApp(string entApiKey, string host,
-            Application app)
+        public virtual async Task SaveDataApp(string entApiKey, string host, Application app)
         {
             State.Applications = State.Applications.Where(a => a.ID != app.ID).ToList();
 

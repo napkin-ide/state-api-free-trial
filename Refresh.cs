@@ -78,7 +78,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 {
                     log.LogInformation($"Refreshing data flow state");
 
-                    return await refreshDataFlow(harness, log, stateDetails);
+                    return await refreshJourneys(harness, log, stateDetails);
                 });
             else
                 throw new Exception("A valid State Key must be provided (data-apps, data-flow).");
