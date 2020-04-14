@@ -102,6 +102,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.EnvironmentLookup = resp.Model?.FirstOrDefault()?.Lookup;
         }
         
+        public virtual async Task LoadInfrastructure(EnterpriseManagerClient entMgr, string entApiKey, string envLookup, string type)
+        {
+            var regHosts = await entMgr.LoadInfrastructureDetails(entApiKey, envLookup, type);
+
+            State.InfrastructureDetails = regHosts.Model;
+        }
+
         public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             var mpsResp = await appMgr.ListModulePackSetups(entApiKey, host);
