@@ -179,9 +179,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task SaveDataApp(string entApiKey, string host, Application app)
         {
+            app.ID = randomizeGuid();
+            
             State.Applications = State.Applications.Where(a => a.ID != app.ID).ToList();
 
             State.Applications.Add(app);
+
+            State.AddingApp = false;
 
             await SetActiveApp(entApiKey, app);
         }
@@ -202,6 +206,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.AddingApp = New;
 
         }
+
+        protected virtual Guid randomizeGuid(){
+            return Guid.NewGuid();
+        }
+        
         #endregion
     }
 }
