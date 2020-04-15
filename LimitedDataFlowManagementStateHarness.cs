@@ -49,6 +49,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
             State.EnvironmentLookup = "limited-lcu-int";
 
+            if(State.EmulatedDataFlowIDs.IsNullOrEmpty()){
+                State.EmulatedDataFlowIDs = new List<string>{
+                    "27a2c473-95a5-4120-bb04-df45fd10c9ac"
+                };
+            };
+
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
 
@@ -90,8 +96,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         // }
 
         public virtual async Task LoadDataFlows(ApplicationDeveloperClient appDev, string entApiKey)
-        {
-            
+        {           
             await SetActiveDataFlow(appDev, entApiKey, State?.ActiveDataFlow?.Lookup);
         }
 
