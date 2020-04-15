@@ -17,6 +17,7 @@ using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using LCU.Personas.Enterprises;
 
 namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
@@ -38,6 +39,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         [DataMember]
         public virtual string EnvironmentLookup { get; set; }
+
+    
+        [DataMember]
+        public virtual List<InfrastructureDetails> InfrastructureDetails { get; set; }
 
         [DataMember]
         public virtual bool IsCreating { get; set; }
