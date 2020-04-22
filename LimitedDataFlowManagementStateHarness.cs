@@ -232,6 +232,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
             dataFlow.Output = new DataFlowOutput();
 
+            dataFlow.Output.Modules = new List<Module>();
+
+            dataFlow.Output.Streams = new List<ModuleStream>();
+
             if (flowToSave != null){
                 State.DataFlows.Remove(flowToSave);
             }
