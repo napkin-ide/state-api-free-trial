@@ -98,6 +98,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                 State.VersionLookups = new Dictionary<string, List<string>>();
 
+                //Note: Make sure to always have "latest" at the top of these lists, and the actual latest version as the second list entry
+
                 State.VersionLookups["@habistack/lcu-fathym-forecast-demo"] = new List<string>(){
                     "latest",
                     "1.1.1",
@@ -109,6 +111,31 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     "0.0.6",
                     "0.0.5",
                 };
+
+                State.VersionLookups["@lowcodeunit/lcu-charts-demo"] = new List<string>(){
+                    "latest",
+                    "1.7.6",
+                    "1.7.15-fathym-hackathon",
+                    "1.6.1",
+                };
+
+                State.PathLookups = new Dictionary<string, string>();
+
+                State.PathLookups["@habistack/lcu-fathym-forecast-demo@1.1.1"] = "/forecast";
+
+                State.PathLookups["@habistack/lcu-fathym-forecast-demo@0.9.163-fathym-hackathon-lcu-charts-utilization"] = "/forecast/charts";
+
+                State.PathLookups["@habistack/lcu-fathym-forecast-demo@0.9.169-bill-precip-adjust"] = "/forecast/precip";
+
+                State.PathLookups["@semanticjs/freeboard@0.0.6"] = "/freeboard";
+
+                State.PathLookups["@semanticjs/freeboard@0.0.5"] = "/freeboard/5";
+
+                State.PathLookups["@lowcodeunit/lcu-charts-demo@1.7.6"] = "/charts";
+
+                State.PathLookups["@lowcodeunit/lcu-charts-demo@1.7.15-fathym-hackathon"] = "/charts/hackathon";
+
+                State.PathLookups["@lowcodeunit/lcu-charts-demo@1.6.1"] = "/charts/161";
             }
         }
 
@@ -171,6 +198,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         dafApp.Metadata.Remove("PackageVersion");
                 }
 
+                if (dafApp.Metadata.ContainsKey("PackageVersion") && dafApp.Metadata["PackageVersion"].ToString() == "latest"){
+                    dafApp.Metadata["PackageVersion"] = State.VersionLookups[dafApp.Metadata["NPMPackage"].ToString()].ElementAt(1);
+                }
+
+                //TODO: Save logic for DAF App
+                
                 State.ActiveDAFApp = dafApp;
             }
 
@@ -204,7 +237,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.ActiveApp = null;
 
             State.AddingApp = New;
-
         }
 
         protected virtual Guid randomizeGuid(){

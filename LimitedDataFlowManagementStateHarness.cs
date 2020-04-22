@@ -97,7 +97,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task LoadDataFlows(ApplicationDeveloperClient appDev, string entApiKey)
         {           
-            await SetActiveDataFlow(appDev, entApiKey, State?.ActiveDataFlow?.Lookup);
+            await SetActiveDataFlow(appDev, entApiKey, State.ActiveDataFlow);
         }
 
         public virtual async Task LoadEnvironment(EnterpriseManagerClient entMgr, string entApiKey)
@@ -230,13 +230,14 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 State.DataFlows.Remove(flowToSave);
             }
 
-            State.DataFlows.Add(dataFlow);
+            flowToSave.ID = randomizeGuid();
 
+            State.DataFlows.Add(flowToSave);
         }
 
-        public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, string dfLookup)
+        public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, DataFlow dataFlow)
         {
-            State.ActiveDataFlow = State.DataFlows.FirstOrDefault(df => df.Lookup == dfLookup);
+            State.ActiveDataFlow = dataFlow;
 
             // if (State.ActiveDataFlow != null)
             // {
@@ -258,6 +259,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             State.IsCreating = !State.IsCreating;
         }
+
+        protected virtual Guid randomizeGuid(){
+            return Guid.NewGuid();
+        }
+        
         #endregion
     }               
 }
