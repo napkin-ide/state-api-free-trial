@@ -43,14 +43,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual async Task Mock(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
+        public virtual async Task Mock(ApplicationManagerClient appMgr, ApplicationDeveloperClient appDev, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             State.EnvironmentLookup = "limited-lcu-int";
 
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
 
-            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);    
+            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);
+
+            await LoadDataFlows(appMgr, appDev, entApiKey);    
         }
 
         public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
@@ -92,7 +94,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             var resp = await appMgr.ListDataFlows(entApiKey, State.EnvironmentLookup);
 
-            State.EmulatedDataFlows = resp.Model;
+            State.EmulatedDataFlows = resp.Model.Where(df => df.Lookup == "edf").ToList();
 
             //await SetActiveDataFlow(appDev, entApiKey, State.ActiveDataFlow);
         }
@@ -226,11 +228,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             var flowToSave =  State.DataFlows.FirstOrDefault(df => df.Lookup == dataFlow.Lookup);
 
+            dataFlow.ID = randomizeGuid();
+
+            dataFlow.Output = new DataFlowOutput();
+
             if (flowToSave != null){
                 State.DataFlows.Remove(flowToSave);
             }
-
-            dataFlow.ID = randomizeGuid();
 
             State.DataFlows.Add(dataFlow);
         }
