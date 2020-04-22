@@ -237,7 +237,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.ActiveApp = null;
 
             State.AddingApp = New;
-
         }
 
         protected virtual Guid randomizeGuid(){
