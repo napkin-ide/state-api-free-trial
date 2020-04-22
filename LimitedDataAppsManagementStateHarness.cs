@@ -46,8 +46,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #region API Methods
         public virtual void Mock(string entApiKey, string host)
         {
-            if (State.Applications.IsNullOrEmpty())
-            {
+            // if (State.Applications.IsNullOrEmpty())
+            // {
                 State.Applications = new List<Application>{
                     new Application(){
                         Container = "lcu-data-apps",
@@ -136,7 +136,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 State.PathLookups["@lowcodeunit/lcu-charts-demo@1.7.15-fathym-hackathon"] = "/charts/hackathon";
 
                 State.PathLookups["@lowcodeunit/lcu-charts-demo@1.6.1"] = "/charts/161";
-            }
+            // }
         }
 
         public virtual async Task DeleteDataApp(string entApiKey, string appID)
