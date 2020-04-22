@@ -201,8 +201,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 if (dafApp.Metadata.ContainsKey("PackageVersion") && dafApp.Metadata["PackageVersion"].ToString() == "latest"){
                     dafApp.Metadata["PackageVersion"] = State.VersionLookups[dafApp.Metadata["NPMPackage"].ToString()].ElementAt(1);
                 }
-
-                //TODO: Save logic for DAF App
                 
                 State.ActiveDAFApp = dafApp;
             }
