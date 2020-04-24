@@ -201,6 +201,18 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 if (dafApp.Metadata.ContainsKey("PackageVersion") && dafApp.Metadata["PackageVersion"].ToString() == "latest"){
                     dafApp.Metadata["PackageVersion"] = State.VersionLookups[dafApp.Metadata["NPMPackage"].ToString()].ElementAt(1);
                 }
+
+                if(dafApp.ApplicationID.IsEmpty()){
+                    dafApp.ApplicationID = randomizeGuid();
+                }
+
+                var dafAppToSave = State.DAFApps.FirstOrDefault(da => da.ApplicationID == dafApp.ApplicationID);
+                
+                if (dafAppToSave != null){
+                    State.DAFApps.Remove(dafAppToSave);
+                }
+
+                State.DAFApps.Add(dafApp);
                 
                 State.ActiveDAFApp = dafApp;
             }
@@ -210,9 +222,15 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         public virtual async Task SaveDataApp(string entApiKey, string host, Application app)
         {
-            app.ID = randomizeGuid();
-            
-            State.Applications = State.Applications.Where(a => a.ID != app.ID).ToList();
+            if(app.ID.IsEmpty()){
+                app.ID = randomizeGuid();
+            }
+
+            var appToSave = State.Applications.FirstOrDefault(a => a.ID == app.ID);
+
+            if (appToSave != null){
+                State.Applications.Remove(appToSave);
+            }
 
             State.Applications.Add(app);
 
