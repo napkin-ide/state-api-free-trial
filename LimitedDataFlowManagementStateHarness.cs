@@ -43,16 +43,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual async Task Mock(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
+        public virtual async Task Mock(ApplicationManagerClient appMgr, ApplicationDeveloperClient appDev, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
-            //  TODO:  Mock starting point state
-
             State.EnvironmentLookup = "limited-lcu-int";
 
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
 
-            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);    
+            await LoadModulePackSetup(appMgr, entMgr, entApiKey, host);
+
+            await LoadDataFlows(appMgr, appDev, entApiKey);    
         }
 
         public virtual async Task CheckActiveDataFlowStatus(ApplicationDeveloperClient appDev, string entApiKey)
@@ -89,12 +89,17 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         //     await LoadDataFlows(entApiKey);
         // }
 
-        public virtual async Task LoadDataFlows(ApplicationDeveloperClient appDev, string entApiKey)
+        // LoadDataFlows - Used to load the Emulated Data Flows
+        public virtual async Task LoadDataFlows(ApplicationManagerClient appMgr, ApplicationDeveloperClient appDev, string entApiKey)
         {
-            
-            await SetActiveDataFlow(appDev, entApiKey, State?.ActiveDataFlow?.Lookup);
+            var resp = await appMgr.ListDataFlows(entApiKey, State.EnvironmentLookup);
+
+            State.EmulatedDataFlows = resp.Model.Where(df => df.Lookup == "edf").ToList();
+
+            //await SetActiveDataFlow(appDev, entApiKey, State.ActiveDataFlow);
         }
 
+        //LoadEnvironment - Not used in Limited Trial
         public virtual async Task LoadEnvironment(EnterpriseManagerClient entMgr, string entApiKey)
         {
             var resp = await entMgr.ListEnvironments(entApiKey);
@@ -102,6 +107,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.EnvironmentLookup = resp.Model?.FirstOrDefault()?.Lookup;
         }
         
+        // LoadInfrastructure - Grabs connection string info
         public virtual async Task LoadInfrastructure(EnterpriseManagerClient entMgr, string entApiKey, string envLookup, string type)
         {
             var regHosts = await entMgr.LoadInfrastructureDetails(entApiKey, envLookup, type);
@@ -109,6 +115,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.InfrastructureDetails = regHosts.Model;
         }
 
+        // LoadModulePackSetup - Runs on "Mock" method in refresh workflow, returns all available data flow modules and related info
         public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
             var mpsResp = await appMgr.ListModulePackSetups(entApiKey, host);
@@ -208,30 +215,39 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
         }
 
-        public virtual async Task Refresh(ApplicationDeveloperClient appDev, ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
-        {
-            //await LoadEnvironment(entMgr, entApiKey);
 
-            await LoadDataFlows(appDev, entApiKey);
+        // public virtual async Task Refresh(ApplicationDeveloperClient appDev, ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
+        // {
+        //     //await LoadEnvironment(entMgr, entApiKey);
 
-            
-        }
+        //     await LoadDataFlows(appMgr, appDev, entApiKey);          
+        // }
 
+        // SaveDataFlow - Add user created data flow to the State (not persisted to Graph DB)
         public virtual async Task SaveDataFlow(string entApiKey, DataFlow dataFlow)
         {
             var flowToSave =  State.DataFlows.FirstOrDefault(df => df.Lookup == dataFlow.Lookup);
 
+            dataFlow.ID = randomizeGuid();
+
             if (flowToSave != null){
                 State.DataFlows.Remove(flowToSave);
             }
+            
+            else{
+                dataFlow.Output = new DataFlowOutput();
+
+                dataFlow.Output.Modules = new List<Module>();
+
+                dataFlow.Output.Streams = new List<ModuleStream>();
+            }
 
             State.DataFlows.Add(dataFlow);
-
         }
 
-        public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, string dfLookup)
+        public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, DataFlow dataFlow)
         {
-            State.ActiveDataFlow = State.DataFlows.FirstOrDefault(df => df.Lookup == dfLookup);
+            State.ActiveDataFlow = dataFlow;
 
             // if (State.ActiveDataFlow != null)
             // {
@@ -253,6 +269,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             State.IsCreating = !State.IsCreating;
         }
+
+        protected virtual Guid randomizeGuid(){
+            return Guid.NewGuid();
+        }
+        
         #endregion
     }               
 }

@@ -35,11 +35,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         public virtual List<DataFlow> DataFlows { get; set; }
 
         [DataMember]
-        public virtual List<string> EmulatedDataFlowIDs { get; set; }
+        public virtual List<DataFlow> EmulatedDataFlows { get; set; }
 
         [DataMember]
         public virtual string EnvironmentLookup { get; set; }
-    
         [DataMember]
         public virtual List<InfrastructureDetails> InfrastructureDetails { get; set; }
 

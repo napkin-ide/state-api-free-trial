@@ -56,6 +56,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         public virtual bool Loading { get; set; }
 
         [DataMember]
+        public virtual Dictionary<string, string> PathLookups { get; set; }
+
+        [DataMember]
         public virtual Dictionary<string,List<string>> VersionLookups { get; set; }
 
         [DataMember]

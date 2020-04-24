@@ -13,6 +13,7 @@ using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.WindowsAzure.Storage.Blob;
 using LCU.StateAPI.Utilities;
 using LCU.Personas.Client.Applications;
+using LCU.Graphs.Registry.Enterprises.DataFlows;
 
 namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 {
@@ -21,7 +22,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     public class SetActiveDataFlowRequest
     {
         [DataMember]
-        public virtual string DataFlowLookup { get; set; }
+        public virtual DataFlow DataFlow { get; set; }
     }
     public class SetActiveDataFlow
     {
@@ -41,11 +42,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, SetActiveDataFlowRequest, LimitedDataFlowManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
-                log.LogInformation($"Setting Active Data Flow: {reqData.DataFlowLookup}");
+                log.LogInformation($"Setting Active Data Flow: {reqData.DataFlow}");
 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.SetActiveDataFlow(appDev, stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
+                await harness.SetActiveDataFlow(appDev, stateDetails.EnterpriseAPIKey, reqData.DataFlow);
 
                 return Status.Success;
             });
