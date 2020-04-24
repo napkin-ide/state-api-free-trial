@@ -188,21 +188,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                             State.ModuleDisplays.Add(newMODisp);
 
-                            State.DataFlows = new List<DataFlow>{
-                                new DataFlow(){
-                                    ModulePacks = new List<string>{
-
-                                    }
-
-                                }
-                            };
-
-                            // if (State.AllowCreationModules)
-                            // {
-                            //     State.ModuleOptions.Add(mo);
-
-                            //     State.ModuleDisplays.Add(moDisp);
-                            // }
                         });
                     }
                     else if (nonInfraModuleTypes.Contains(mo.ModuleType))
