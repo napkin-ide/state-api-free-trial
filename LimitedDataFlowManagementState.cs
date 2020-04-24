@@ -39,7 +39,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
         [DataMember]
         public virtual string EnvironmentLookup { get; set; }
-
     
         [DataMember]
         public virtual List<InfrastructureDetails> InfrastructureDetails { get; set; }
