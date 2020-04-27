@@ -55,11 +55,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         Hosts = new List<string>{
                             host,
                         },
-                        Name = "Freeboard",
-                        PathRegex = "/freeboard*",
+                        Name = "Hello World",
+                        PathRegex = "/helloworld*",
                         Priority = 10000,
                         ID = new Guid("00000000-0000-0000-0000-000000000001")
                     },
+
                     new Application(){
                         Container = "lcu-data-apps",
                         EnterpriseAPIKey = entApiKey,
@@ -70,6 +71,30 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         PathRegex = "/forecast*",
                         Priority = 10500,
                         ID = new Guid("00000000-0000-0000-0000-000000000002")
+                    },
+
+                    new Application(){
+                        Container = "lcu-data-apps",
+                        EnterpriseAPIKey = entApiKey,
+                        Hosts = new List<string>{
+                            host,
+                        },
+                        Name = "LCU Charts",
+                        PathRegex = "/charts*",
+                        Priority = 11000,
+                        ID = new Guid("00000000-0000-0000-0000-000000000003")
+                    },
+
+                    new Application(){
+                        Container = "lcu-data-apps",
+                        EnterpriseAPIKey = entApiKey,
+                        Hosts = new List<string>{
+                            host,
+                        },
+                        Name = "Trial Dashboard",
+                        PathRegex = "/dashboard*",
+                        Priority = 11500,
+                        ID = new Guid("00000000-0000-0000-0000-000000000004")
                     }
                 };
 
@@ -79,9 +104,9 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         ID = new Guid("a0000000-0000-0000-0000-000000000001"),
                         Lookup = null,
                         Priority = 500,
-                        BaseHref = "/freeboard/",
-                        NPMPackage = "@semanticjs/freeboard",
-                        PackageVersion = "0.0.6",
+                        BaseHref = "/helloworld/",
+                        NPMPackage = "@fathym-it/hello-world-demo",
+                        PackageVersion = "1.3.15",
                     },
 
                     new DAFViewConfiguration(){
@@ -92,7 +117,29 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         BaseHref = "/forecast/",
                         NPMPackage = "@habistack/lcu-fathym-forecast-demo",
                         PackageVersion = "1.1.1",
-                    }
+                    },
+
+                    new DAFViewConfiguration(){
+                        ApplicationID = new Guid("00000000-0000-0000-0000-000000000003"),
+                        ID = new Guid("a0000000-0000-0000-0000-000000000003"),
+                        Lookup = null,
+                        Priority = 500,
+                        BaseHref = "/charts/",
+                        NPMPackage = "@lowcodeunit/lcu-charts-demo",
+                        PackageVersion = "1.7.6",
+                    },
+
+                    new DAFViewConfiguration(){
+                        ApplicationID = new Guid("00000000-0000-0000-0000-000000000004"),
+                        ID = new Guid("a0000000-0000-0000-0000-000000000004"),
+                        Lookup = null,
+                        Priority = 500,
+                        BaseHref = "/dashboard/",
+                        NPMPackage = "@lowcodeunit-dashboards/lcu-fathym-dashboard-getting-started",
+                        PackageVersion = "1.1.23-integration",
+                    },
+
+                    
                 };
                 State.AppType = DAFAppTypes.View;
 
@@ -117,6 +164,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     "1.7.6",
                     "1.7.15-fathym-hackathon",
                     "1.6.1",
+                };
+
+                State.VersionLookups["@lowcodeunit-dashboards/lcu-fathym-dashboard-getting-started"] = new List<string>(){
+                    "latest",
+                    "1.1.23-integration",
+                    "1.1.22-integration",
                 };
 
                 State.PathLookups = new Dictionary<string, string>();

@@ -228,11 +228,17 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
 
             State.DataFlows.Add(dataFlow);
+
+            State.ActiveDataFlow = dataFlow;
+
+            State.IsCreating = false;
         }
 
         public virtual async Task SetActiveDataFlow(ApplicationDeveloperClient appDev, string entApiKey, DataFlow dataFlow)
         {
             State.ActiveDataFlow = dataFlow;
+
+            State.IsCreating = false;
 
             // if (State.ActiveDataFlow != null)
             // {
