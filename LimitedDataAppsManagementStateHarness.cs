@@ -129,6 +129,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         PackageVersion = "1.1.1",
                     },
                     
+
+                    // new DAFViewConfiguration(){
+                    //     ApplicationID = new Guid("00000000-0000-0000-0000-000000000003"),
+                    //     ID = new Guid("a0000000-0000-0000-0000-000000000003"),
+                    //     Lookup = null,
+                    //     Priority = 500,
+                    //     BaseHref = "/charts/",
+                    //     NPMPackage = "@lowcodeunit/lcu-charts-demo",
+                    //     PackageVersion = "1.7.6",
+                    // },
                 };
                 State.AppType = DAFAppTypes.View;
 
