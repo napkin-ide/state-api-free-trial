@@ -191,11 +191,20 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
         }
 
-        public virtual async Task DeleteDataApp(string entApiKey, string appID)
+        public virtual async Task DeleteDataApp(string entApiKey, string appID, string dafAppID)
         {
             var appToDelete = State.Applications.FirstOrDefault(a => a.ID.ToString() == appID);
             
             State.Applications.Remove(appToDelete);
+
+            var item = State.DAFApps.FirstOrDefault(da => da.ApplicationID.ToString() == dafAppID);
+
+            State.DAFApps.Remove(item);
+
+            State.ActiveApp = null;
+
+            State.ActiveDAFApp = null;
+  
         }
 
         public virtual async Task LoadAppView(string entApiKey)
@@ -285,6 +294,18 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
 
             State.Applications.Add(app);
+            
+            var newDafApp = new DAFViewConfiguration(){
+                ApplicationID = app.ID,
+                ID = Guid.NewGuid(),
+                Lookup = null,
+                NPMPackage = "@lowcodeunit/lcu-charts-demo",
+                Priority = 500,
+                BaseHref = "/charts/",
+                PackageVersion = null
+            };
+
+            await SaveDAFApp(entApiKey, newDafApp);
 
             State.AddingApp = false;
 
