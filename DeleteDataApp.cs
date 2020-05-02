@@ -23,8 +23,6 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         [DataMember]
         public virtual string AppID { get; set; }
 
-        [DataMember]
-        public virtual string DAFAppID { get; set; }
     }
 
     public class DeleteDataApp
@@ -41,7 +39,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.DeleteDataApp(stateDetails.EnterpriseAPIKey, reqData.AppID, reqData.DAFAppID);
+                await harness.DeleteDataApp(stateDetails.EnterpriseAPIKey, reqData.AppID);
 
                 return Status.Success;
             });

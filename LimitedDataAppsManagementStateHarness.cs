@@ -191,13 +191,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
         }
 
-        public virtual async Task DeleteDataApp(string entApiKey, string appID, string dafAppID)
+        public virtual async Task DeleteDataApp(string entApiKey, string appID)
         {
             var appToDelete = State.Applications.FirstOrDefault(a => a.ID.ToString() == appID);
             
             State.Applications.Remove(appToDelete);
 
-            var item = State.DAFApps.FirstOrDefault(da => da.ApplicationID.ToString() == dafAppID);
+            var item = State.DAFApps.FirstOrDefault(da => da.ApplicationID.ToString() == appID);
 
             State.DAFApps.Remove(item);
 
