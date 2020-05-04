@@ -73,17 +73,17 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         ID = new Guid("00000000-0000-0000-0000-000000000002")
                     },
 
-                    new Application(){
-                        Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
-                            host,
-                        },
-                        Name = "LCU Charts",
-                        PathRegex = "/charts*",
-                        Priority = 11000,
-                        ID = new Guid("00000000-0000-0000-0000-000000000003")
-                    },
+                    // new Application(){
+                    //     Container = "lcu-data-apps",
+                    //     EnterpriseAPIKey = entApiKey,
+                    //     Hosts = new List<string>{
+                    //         host,
+                    //     },
+                    //     Name = "LCU Charts",
+                    //     PathRegex = "/charts*",
+                    //     Priority = 11000,
+                    //     ID = new Guid("00000000-0000-0000-0000-000000000003")
+                    // },
 
                     new Application(){
                         Container = "lcu-data-apps",
@@ -305,11 +305,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 PackageVersion = null
             };
 
+            await SetActiveApp(entApiKey, app);
+
             await SaveDAFApp(entApiKey, newDafApp);
 
-            State.AddingApp = false;
-
-            await SetActiveApp(entApiKey, app);
+            State.AddingApp = false;          
         }
 
         public virtual async Task SetActiveApp(string entApiKey, Application app)
