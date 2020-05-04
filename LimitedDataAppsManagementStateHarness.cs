@@ -152,6 +152,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     "0.9.163-fathym-hackathon-lcu-charts-utilization"
                 };
 
+                State.VersionLookups["@fathym-it/hello-world-demo"] = new List<string>(){
+                    "latest",
+                    "1.3.15",
+                    "1.2.13-integration",
+                    "1.1.1"
+                };
+
                 State.VersionLookups["@semanticjs/freeboard"] = new List<string>(){
                     "latest",
                     "0.0.6",
@@ -172,6 +179,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 };
 
                 State.PathLookups = new Dictionary<string, string>();
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.3.15"] = "/helloworld";
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.2.13-integration"] = "/helloworld/1213-integration";
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.1.1"] = "/helloworld/111";
 
                 State.PathLookups["@habistack/lcu-fathym-forecast-demo@1.1.1"] = "/forecast";
 
