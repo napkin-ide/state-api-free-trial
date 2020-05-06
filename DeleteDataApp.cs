@@ -22,6 +22,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
     {
         [DataMember]
         public virtual string AppID { get; set; }
+
     }
 
     public class DeleteDataApp

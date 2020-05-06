@@ -73,17 +73,17 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                         ID = new Guid("00000000-0000-0000-0000-000000000002")
                     },
 
-                    new Application(){
-                        Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
-                            host,
-                        },
-                        Name = "LCU Charts",
-                        PathRegex = "/charts*",
-                        Priority = 11000,
-                        ID = new Guid("00000000-0000-0000-0000-000000000003")
-                    },
+                    // new Application(){
+                    //     Container = "lcu-data-apps",
+                    //     EnterpriseAPIKey = entApiKey,
+                    //     Hosts = new List<string>{
+                    //         host,
+                    //     },
+                    //     Name = "LCU Charts",
+                    //     PathRegex = "/charts*",
+                    //     Priority = 11000,
+                    //     ID = new Guid("00000000-0000-0000-0000-000000000003")
+                    // },
 
                     new Application(){
                         Container = "lcu-data-apps",
@@ -152,6 +152,13 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     "0.9.163-fathym-hackathon-lcu-charts-utilization"
                 };
 
+                State.VersionLookups["@fathym-it/hello-world-demo"] = new List<string>(){
+                    "latest",
+                    "1.3.15",
+                    "1.2.13-integration",
+                    "1.1.1"
+                };
+
                 State.VersionLookups["@semanticjs/freeboard"] = new List<string>(){
                     "latest",
                     "0.0.6",
@@ -172,6 +179,12 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 };
 
                 State.PathLookups = new Dictionary<string, string>();
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.3.15"] = "/helloworld";
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.2.13-integration"] = "/helloworld/1213-integration";
+
+                State.PathLookups["@fathym-it/hello-world-demo@1.1.1"] = "/helloworld/111";
 
                 State.PathLookups["@habistack/lcu-fathym-forecast-demo@1.1.1"] = "/forecast";
 
@@ -196,6 +209,15 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             var appToDelete = State.Applications.FirstOrDefault(a => a.ID.ToString() == appID);
             
             State.Applications.Remove(appToDelete);
+
+            var item = State.DAFApps.FirstOrDefault(da => da.ApplicationID.ToString() == appID);
+
+            State.DAFApps.Remove(item);
+
+            State.ActiveApp = null;
+
+            State.ActiveDAFApp = null;
+  
         }
 
         public virtual async Task LoadAppView(string entApiKey)
@@ -285,10 +307,22 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
 
             State.Applications.Add(app);
-
-            State.AddingApp = false;
+            
+            var newDafApp = new DAFViewConfiguration(){
+                ApplicationID = app.ID,
+                ID = Guid.NewGuid(),
+                Lookup = null,
+                NPMPackage = "@lowcodeunit/lcu-charts-demo",
+                Priority = 500,
+                BaseHref = "/charts/",
+                PackageVersion = null
+            };
 
             await SetActiveApp(entApiKey, app);
+
+            await SaveDAFApp(entApiKey, newDafApp);
+
+            State.AddingApp = false;          
         }
 
         public virtual async Task SetActiveApp(string entApiKey, Application app)
