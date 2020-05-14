@@ -118,7 +118,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         // LoadModulePackSetup - Runs on "Mock" method in refresh workflow, returns all available data flow modules and related info
         public virtual async Task LoadModulePackSetup(ApplicationManagerClient appMgr, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
-            var mpsResp = await appMgr.ListModulePackSetups(entApiKey, host);
+            var mpsResp = await appMgr.ListModulePackSetups(entApiKey);
 
             State.ModulePacks = new List<ModulePack>();
 
