@@ -45,7 +45,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #region API Methods
         public virtual async Task Mock(ApplicationManagerClient appMgr, ApplicationDeveloperClient appDev, EnterpriseManagerClient entMgr, string entApiKey, string host)
         {
-            State.EnvironmentLookup = "limited-lcu-int";
+            State.EnvironmentLookup = Environment.GetEnvironmentVariable("EnvironmentLookup");
 
             if (State.DataFlows.IsNullOrEmpty())
                 State.DataFlows = new List<DataFlow>();
@@ -94,7 +94,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         {
             var resp = await appMgr.ListDataFlows(entApiKey, State.EnvironmentLookup);
 
-            State.EmulatedDataFlows = resp.Model.Where(df => df.Lookup == "edf").ToList();
+            if(State.EnvironmentLookup == "limited-lcu-int")
+                State.EmulatedDataFlows = resp.Model.Where(df => df.Lookup == "edf").ToList();
+            else
+                State.EmulatedDataFlows = resp.Model.Where(df => df.Lookup == "ltd").ToList();        
 
             //await SetActiveDataFlow(appDev, entApiKey, State.ActiveDataFlow);
         }
