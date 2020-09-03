@@ -12,34 +12,35 @@ using LCU.Graphs.Registry.Enterprises.Apps;
 using LCU.Personas.Client.Applications;
 using Fathym;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using LCU.StateAPI.Utilities;
+using LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.DataApps
 {
     [Serializable]
     [DataContract]
-    public class SaveDataAppRequest
+    public class SetActiveAppRequest
     {
         [DataMember]
         public virtual Application App { get; set; }
     }
 
-    public class SaveDataApp
+    public class SetActiveApp
     {
-        [FunctionName("SaveDataApp")]
+        [FunctionName("SetActiveApp")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
-            [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
+            [Blob("state-api/{headers.lcu-ent-lookup}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, SaveDataAppRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, SetActiveAppRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                log.LogInformation($"Saving Data App: {reqData.App.Name}");
+                log.LogInformation($"Setting Active App: {reqData.App.Name}");
 
-                await harness.SaveDataApp(stateDetails.EnterpriseAPIKey, stateDetails.Host, reqData.App);
+                await harness.SetActiveApp(stateDetails.EnterpriseLookup, reqData.App);
 
                 return Status.Success;
             });

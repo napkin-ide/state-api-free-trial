@@ -24,12 +24,12 @@ using LCU.Personas.Client.Applications;
 using Fathym.API;
 using LCU.Graphs.Registry.Enterprises.Apps;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State
 {
     public class LimitedJourneysManagementStateHarness : LCUStateHarness<LimitedJourneysManagementState>
     {
         #region Fields
-        protected readonly List<DAFApplicationConfiguration> dafApps;
+        protected readonly List<DAFApplication> dafApps;
         #endregion
 
         #region Properties

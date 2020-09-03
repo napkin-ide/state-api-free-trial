@@ -18,7 +18,7 @@ using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State
 {
     [Serializable]
     [DataContract]
@@ -28,10 +28,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         public virtual Application ActiveApp { get; set; }
 
         [DataMember]
-        public List<DAFAPIConfiguration> ActiveDAFAPIs { get; set; }
+        public List<DAFApplication> ActiveDAFAPIs { get; set; }
 
         [DataMember]
-        public virtual DAFApplicationConfiguration ActiveDAFApp { get; set; }
+        public virtual DAFApplication ActiveDAFApp { get; set; }
 
         [DataMember]
         public virtual bool AddingApp { get; set; }
@@ -62,7 +62,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         public virtual Dictionary<string,List<string>> VersionLookups { get; set; }
 
         [DataMember]
-        public virtual List<DAFApplicationConfiguration> DAFApps { get; set; }
+        public virtual List<DAFApplication> DAFApps { get; set; }
     }
 
     [DataContract]

@@ -22,7 +22,7 @@ namespace state_api_limited_trial_tests
         [TestMethod]
         public async Task TestDeleteDataApp()
         {
-            LcuEntApiKey = "";            
+            LcuentLookup = "";            
             PrincipalId = "";
 
             addRequestHeaders();

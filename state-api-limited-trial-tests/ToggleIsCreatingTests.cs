@@ -22,7 +22,7 @@ namespace state_api_guided_tour_tests
         [TestMethod]
         public async Task TestToggleIsCreating()
         {
-            LcuEntApiKey = "";            
+            LcuentLookup = "";            
             PrincipalId = "";
 
             addRequestHeaders();

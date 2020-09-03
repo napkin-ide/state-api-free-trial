@@ -14,9 +14,9 @@ using System;
 using LCU.StateAPI;
 using LCU.StateAPI.Hosting;
 
-[assembly: FunctionsStartup(typeof(LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.Startup))]
+[assembly: FunctionsStartup(typeof(LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.Host.Startup))]
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.Host
 {
     public class Startup : StateAPIStartup
     {

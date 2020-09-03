@@ -9,10 +9,11 @@ using System.Security.Claims;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using LCU.StateAPI;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using LCU.StateAPI.Utilities;
+using LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.Host
 {
     public static class ConnectToState
     {
@@ -21,7 +22,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             ClaimsPrincipal claimsPrincipal, //[LCUStateDetails]StateDetails stateDetails,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRGroupAction> signalRGroupActions,
-            [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
+            [Blob("state-api/{headers.lcu-ent-lookup}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
             var stateDetails = StateUtils.LoadStateDetails(req);
 

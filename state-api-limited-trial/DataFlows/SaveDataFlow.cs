@@ -8,38 +8,39 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using LCU.Graphs.Registry.Enterprises.DataFlows;
 using Fathym;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using LCU.StateAPI.Utilities;
 using LCU.Personas.Client.Applications;
+using LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.DataFlows
 {
     [Serializable]
     [DataContract]
-    public class DeleteDataAppRequest
+    public class SaveDataFlowRequest
     {
         [DataMember]
-        public virtual string AppID { get; set; }
-
+        public virtual DataFlow DataFlow { get; set; }
     }
 
-    public class DeleteDataApp
+    public class SaveDataFlow
     {
-        [FunctionName("DeleteDataApp")]
+        [FunctionName("SaveDataFlow")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
-            [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
+            [Blob("state-api/{headers.lcu-ent-lookup}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, DeleteDataAppRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, SaveDataFlowRequest, LimitedDataFlowManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
-                log.LogInformation($"Deleting Data Flow: {reqData.AppID}");
-                
+                log.LogInformation($"Saving Data Flow: {reqData.DataFlow.Name}");
+
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.DeleteDataApp(stateDetails.EnterpriseAPIKey, reqData.AppID);
+                await harness.SaveDataFlow(stateDetails.EnterpriseLookup, reqData.DataFlow);
 
                 return Status.Success;
             });
