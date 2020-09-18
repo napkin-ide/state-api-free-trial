@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 using System.Collections.Generic;
 using LCU.Personas.Enterprises;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State
 {
     [Serializable]
     [DataContract]

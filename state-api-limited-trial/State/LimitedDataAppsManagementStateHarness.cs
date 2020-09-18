@@ -24,12 +24,12 @@ using LCU.Personas.Client.Applications;
 using Fathym.API;
 using LCU.Graphs.Registry.Enterprises.Apps;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State
 {
     public class LimitedDataAppsManagementStateHarness : LCUStateHarness<LimitedDataAppsManagementState>
     {
         #region Fields
-        protected readonly List<DAFApplicationConfiguration> dafApps;
+        protected readonly List<DAFApplication> dafApps;
         #endregion
 
         #region Properties
@@ -44,15 +44,15 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
         #endregion
 
         #region API Methods
-        public virtual void Mock(string entApiKey, string host)
+        public virtual void Mock(string entLookup, string host)
         {
             if (State.Applications.IsNullOrEmpty())
             {
                 State.Applications = new List<Application>{
                     new Application(){
                         Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
+                        EnterpriseLookup = entLookup,
+                        Hosts = new string[]{
                             host,
                         },
                         Name = "Hello World",
@@ -63,8 +63,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                     new Application(){
                         Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
+                        EnterpriseLookup = entLookup,
+                        Hosts = new string[]{
                             host,
                         },
                         Name = "Fathym Forecast",
@@ -75,7 +75,7 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                     // new Application(){
                     //     Container = "lcu-data-apps",
-                    //     EnterpriseAPIKey = entApiKey,
+                    //     EnterpriseLookup = entLookup,
                     //     Hosts = new List<string>{
                     //         host,
                     //     },
@@ -87,8 +87,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
 
                     new Application(){
                         Container = "lcu-data-apps",
-                        EnterpriseAPIKey = entApiKey,
-                        Hosts = new List<string>{
+                        EnterpriseLookup = entLookup,
+                        Hosts = new string[]{
                             host,
                         },
                         Name = "Trial Dashboard",
@@ -98,35 +98,42 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                     }
                 };
 
-                State.DAFApps = new List<DAFApplicationConfiguration>(){
-                    new DAFViewConfiguration(){
-                        ApplicationID = new Guid("00000000-0000-0000-0000-000000000004"),
+                State.DAFApps = new List<DAFApplication>(){
+                    new DAFApplication(){
+                        ApplicationID = "00000000-0000-0000-0000-000000000004",
                         ID = new Guid("a0000000-0000-0000-0000-000000000004"),
                         Lookup = null,
                         Priority = 500,
-                        BaseHref = "/dashboard/",
-                        NPMPackage = "@lowcodeunit-dashboards/lcu-fathym-dashboard-getting-started",
-                        PackageVersion = "1.1.23-integration",
+                        Details = new DAFViewApplicationDetails()
+                        {
+                            BaseHref = "/dashboard/",
+                            NPMPackage = "@lowcodeunit-dashboards/lcu-fathym-dashboard-getting-started",
+                            PackageVersion = "1.1.23-integration"
+                        }
                     },
-                    
-                    new DAFViewConfiguration(){
-                        ApplicationID = new Guid("00000000-0000-0000-0000-000000000001"),
+
+                    new DAFApplication(){
+                        ApplicationID = "00000000-0000-0000-0000-000000000001",
                         ID = new Guid("a0000000-0000-0000-0000-000000000001"),
                         Lookup = null,
                         Priority = 500,
+                        Details = new DAFViewApplicationDetails(){
                         BaseHref = "/helloworld/",
                         NPMPackage = "@fathym-it/hello-world-demo",
-                        PackageVersion = "1.3.15",
+                        PackageVersion = "1.3.15"
+                        }
                     },
 
-                    new DAFViewConfiguration(){
-                        ApplicationID = new Guid("00000000-0000-0000-0000-000000000002"),
+                    new DAFApplication(){
+                        ApplicationID = "00000000-0000-0000-0000-000000000002",
                         ID = new Guid("a0000000-0000-0000-0000-000000000002"),
                         Lookup = null,
                         Priority = 500,
+                        Details = new DAFViewApplicationDetails(){
                         BaseHref = "/forecast/",
                         NPMPackage = "@habistack/lcu-fathym-forecast-demo",
-                        PackageVersion = "1.1.1",
+                        PackageVersion = "1.1.1"
+                        }
                     },
                     
 
@@ -204,10 +211,10 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             }
         }
 
-        public virtual async Task DeleteDataApp(string entApiKey, string appID)
+        public virtual async Task DeleteDataApp(string entLookup, string appID)
         {
             var appToDelete = State.Applications.FirstOrDefault(a => a.ID.ToString() == appID);
-            
+
             State.Applications.Remove(appToDelete);
 
             var item = State.DAFApps.FirstOrDefault(da => da.ApplicationID.ToString() == appID);
@@ -217,16 +224,16 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.ActiveApp = null;
 
             State.ActiveDAFApp = null;
-  
+
         }
 
-        public virtual async Task LoadAppView(string entApiKey)
+        public virtual async Task LoadAppView(string entLookup)
         {
             if (State.ActiveApp != null)
             {
                 var dafApps = State.DAFApps;
 
-                State.ActiveDAFApp = State.DAFApps?.FirstOrDefault(da => da.ApplicationID == State.ActiveApp.ID)?.JSONConvert<DAFApplicationConfiguration>();
+                State.ActiveDAFApp = State.DAFApps?.FirstOrDefault(da => da.ApplicationID == State.ActiveApp.ID.ToString())?.JSONConvert<DAFApplication>();
 
                 State.ActiveDAFAPIs = null;
 
@@ -235,103 +242,112 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
                 State.ActiveDAFApp = null;
         }
 
-        public virtual async Task SaveDAFApp(string entApiKey, DAFApplicationConfiguration dafApp)
+        public virtual async Task SaveDAFApp(string entLookup, DAFApplication dafApp)
         {
             if (State.ActiveApp != null)
             {
                 if (State.AppType != DAFAppTypes.API)
                 {
-                    if (dafApp.Metadata.ContainsKey("APIRoot"))
-                        dafApp.Metadata.Remove("APIRoot");
+                    if (dafApp.Details.Metadata.ContainsKey("APIRoot"))
+                        dafApp.Details.Metadata.Remove("APIRoot");
 
-                    if (dafApp.Metadata.ContainsKey("InboundPath"))
-                        dafApp.Metadata.Remove("InboundPath");
+                    if (dafApp.Details.Metadata.ContainsKey("InboundPath"))
+                        dafApp.Details.Metadata.Remove("InboundPath");
 
-                    if (dafApp.Metadata.ContainsKey("Methods"))
-                        dafApp.Metadata.Remove("Methods");
+                    if (dafApp.Details.Metadata.ContainsKey("Methods"))
+                        dafApp.Details.Metadata.Remove("Methods");
 
-                    if (dafApp.Metadata.ContainsKey("Security"))
-                        dafApp.Metadata.Remove("Security");
+                    if (dafApp.Details.Metadata.ContainsKey("Security"))
+                        dafApp.Details.Metadata.Remove("Security");
                 }
 
                 if (State.AppType != DAFAppTypes.Redirect)
                 {
-                    if (dafApp.Metadata.ContainsKey("Redirect"))
-                        dafApp.Metadata.Remove("Redirect");
+                    if (dafApp.Details.Metadata.ContainsKey("Redirect"))
+                        dafApp.Details.Metadata.Remove("Redirect");
                 }
 
                 if (State.AppType != DAFAppTypes.View)
                 {
-                    if (dafApp.Metadata.ContainsKey("BaseHref"))
-                        dafApp.Metadata.Remove("BaseHref");
+                    if (dafApp.Details.Metadata.ContainsKey("BaseHref"))
+                        dafApp.Details.Metadata.Remove("BaseHref");
 
-                    if (dafApp.Metadata.ContainsKey("NPMPackage"))
-                        dafApp.Metadata.Remove("NPMPackage");
+                    if (dafApp.Details.Metadata.ContainsKey("NPMPackage"))
+                        dafApp.Details.Metadata.Remove("NPMPackage");
 
-                    if (dafApp.Metadata.ContainsKey("PackageVersion"))
-                        dafApp.Metadata.Remove("PackageVersion");
+                    if (dafApp.Details.Metadata.ContainsKey("PackageVersion"))
+                        dafApp.Details.Metadata.Remove("PackageVersion");
                 }
 
-                if (dafApp.Metadata.ContainsKey("PackageVersion") && dafApp.Metadata["PackageVersion"].ToString() == "latest"){
-                    dafApp.Metadata["PackageVersion"] = State.VersionLookups[dafApp.Metadata["NPMPackage"].ToString()].ElementAt(1);
+                if (dafApp.Details.Metadata.ContainsKey("PackageVersion") && dafApp.Details.Metadata["PackageVersion"].ToString() == "latest")
+                {
+                    dafApp.Details.Metadata["PackageVersion"] = State.VersionLookups[dafApp.Details.Metadata["NPMPackage"].ToString()].ElementAt(1);
                 }
 
-                if(dafApp.ApplicationID.IsEmpty()){
-                    dafApp.ApplicationID = randomizeGuid();
+                if (dafApp.ApplicationID.IsNullOrEmpty())
+                {
+                    dafApp.ApplicationID = randomizeGuid().ToString();
                 }
 
                 var dafAppToSave = State.DAFApps.FirstOrDefault(da => da.ApplicationID == dafApp.ApplicationID);
-                
-                if (dafAppToSave != null){
+
+                if (dafAppToSave != null)
+                {
                     State.DAFApps.Remove(dafAppToSave);
                 }
 
                 State.DAFApps.Add(dafApp);
-                
+
                 State.ActiveDAFApp = dafApp;
             }
 
-            await SetActiveApp(entApiKey, State.ActiveApp);
+            await SetActiveApp(entLookup, State.ActiveApp);
         }
 
-        public virtual async Task SaveDataApp(string entApiKey, string host, Application app)
+        public virtual async Task SaveDataApp(string entLookup, string host, Application app)
         {
-            if(app.ID.IsEmpty()){
+            if (app.ID.IsEmpty())
+            {
                 app.ID = randomizeGuid();
             }
 
             var appToSave = State.Applications.FirstOrDefault(a => a.ID == app.ID);
 
-            if (appToSave != null){
+            if (appToSave != null)
+            {
                 State.Applications.Remove(appToSave);
             }
 
             State.Applications.Add(app);
-            
-            var newDafApp = new DAFViewConfiguration(){
-                ApplicationID = app.ID,
+
+            var newDafApp = new DAFApplication()
+            {
+                ApplicationID = app.ID.ToString(),
                 ID = Guid.NewGuid(),
                 Lookup = null,
-                NPMPackage = "@lowcodeunit/lcu-charts-demo",
                 Priority = 500,
-                BaseHref = "/charts/",
-                PackageVersion = null
+                Details = new DAFViewApplicationDetails()
+                {
+                    NPMPackage = "@lowcodeunit/lcu-charts-demo",
+                    BaseHref = "/charts/",
+                    PackageVersion = null
+                }
             };
 
-            await SetActiveApp(entApiKey, app);
+            await SetActiveApp(entLookup, app);
 
-            await SaveDAFApp(entApiKey, newDafApp);
+            await SaveDAFApp(entLookup, newDafApp);
 
-            State.AddingApp = false;          
+            State.AddingApp = false;
         }
 
-        public virtual async Task SetActiveApp(string entApiKey, Application app)
+        public virtual async Task SetActiveApp(string entLookup, Application app)
         {
             //await ToggleAddNew();
 
             State.ActiveApp = app;
 
-            await LoadAppView(entApiKey);
+            await LoadAppView(entLookup);
         }
 
         public virtual async Task ToggleAddNew(bool New)
@@ -341,10 +357,11 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
             State.AddingApp = New;
         }
 
-        protected virtual Guid randomizeGuid(){
+        protected virtual Guid randomizeGuid()
+        {
             return Guid.NewGuid();
         }
-        
+
         #endregion
     }
 }

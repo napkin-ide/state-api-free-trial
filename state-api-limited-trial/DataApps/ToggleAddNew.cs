@@ -8,37 +8,40 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using LCU.Graphs.Registry.Enterprises.Apps;
+using LCU.Personas.Client.Applications;
 using Fathym;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using LCU.StateAPI.Utilities;
-using LCU.Personas.Client.Applications;
+using LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State;
 
-namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial
+namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.DataApps
 {
     [Serializable]
     [DataContract]
-    public class DeleteDataFlowRequest
+
+
+    public class ToggleAddNewRequest
     {
         [DataMember]
-        public virtual string DataFlowLookup { get; set; }
+        public virtual bool New { get; set; }
     }
-
-    public class DeleteDataFlow
+    public class ToggleAddNew
     {
-        [FunctionName("DeleteDataFlow")]
+        [FunctionName("ToggleAddNew")]
         public virtual async Task<Status> Run([HttpTrigger] HttpRequest req, ILogger log,
             [SignalR(HubName = LimitedTrialState.HUB_NAME)]IAsyncCollector<SignalRMessage> signalRMessages,
-            [Blob("state-api/{headers.lcu-ent-api-key}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
+            [Blob("state-api/{headers.lcu-ent-lookup}/{headers.lcu-hub-name}/{headers.x-ms-client-principal-id}/{headers.lcu-state-key}", FileAccess.ReadWrite)] CloudBlockBlob stateBlob)
         {
-            return await stateBlob.WithStateHarness<LimitedDataFlowManagementState, DeleteDataFlowRequest, LimitedDataFlowManagementStateHarness>(req, signalRMessages, log,
+            return await stateBlob.WithStateHarness<LimitedDataAppsManagementState, ToggleAddNewRequest, LimitedDataAppsManagementStateHarness>(req, signalRMessages, log,
                 async (harness, reqData, actReq) =>
             {
-                log.LogInformation($"Deleting Data Flow: {reqData.DataFlowLookup}");
-                
                 var stateDetails = StateUtils.LoadStateDetails(req);
 
-                await harness.DeleteDataFlow(stateDetails.EnterpriseAPIKey, reqData.DataFlowLookup);
+                log.LogInformation($"Toggling Add New");
+
+                await harness.ToggleAddNew(reqData.New);
 
                 return Status.Success;
             });
