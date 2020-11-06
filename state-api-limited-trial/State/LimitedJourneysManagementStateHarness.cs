@@ -36,8 +36,8 @@ namespace LCU.State.API.NapkinIDE.NapkinIDE.LimitedTrial.State
         #endregion
 
         #region Constructors
-        public LimitedJourneysManagementStateHarness(LimitedJourneysManagementState state)
-            : base(state ?? new LimitedJourneysManagementState())
+        public LimitedJourneysManagementStateHarness(LimitedJourneysManagementState state, ILogger log)
+            : base(state ?? new LimitedJourneysManagementState(), log)
         {
 
         }
